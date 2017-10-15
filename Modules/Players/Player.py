@@ -7,6 +7,14 @@ class Player:
 	def __repr__(self):
 		return self.name or "Player"
 
+	def __str__(self):
+		if type(self.name) == int:
+			return "Player #%s" % self.name
+		return self.name or "Player"
+
+	def setName(self, name):
+		self.name = name
+		
 	def sortHand(self):
 		for i in range(1, len(self.hand)):
 			temp = self.hand[i]

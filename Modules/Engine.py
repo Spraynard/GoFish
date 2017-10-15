@@ -1,8 +1,9 @@
 class Engine:
 	# Controls the start, turn, and checks of the actual game.
-	def __init__(self, Players, Deck):
-		self.Players = Players
-		self.Deck = Deck
+	def __init__(self):
+		self.Players = False
+		self.Deck = False
+		self.currentPlayer = False
 
 	def getDeck(self):
 		# Summary: Gives the deck object out.
@@ -14,6 +15,16 @@ class Engine:
 		# Input: `new_deck` - The new value of the deck object I want to set to
 		# Returns: Void
 		self.Deck = new_deck
+
+	# Player Handling Fuctionality Goes Here
+	def getCurrentPlayer(self):
+		return self.currentPlayer
+
+	def setCurrentPlayer(self, player):
+		self.currentPlayer = player
+
+	def setPlayers(self, players):
+		self.Players = players
 
 	def getPlayers(self):
 		return self.Players
@@ -31,11 +42,11 @@ class Engine:
 		for p in _players:
 			# print p + ': ' + p.showHand()
 			print "%s: %s" % (p, p.showHand())
+	# End Player Handling Functionality
 
-	# hand Drawing Functionality goes here
+	# Hand Drawing Functionality goes here
 	def drawCard(self):
 		deck = self.getDeck()
-		print "This is the deck: ", deck
 		card = deck.pop()
 		self.setDeck(deck)
 
@@ -64,7 +75,29 @@ class Engine:
 			p.insertHand(playerHand)
 
 	# End Hand Drawing Functionality
-	def initialize(self):
-		self.listPlayers()
+
+	# Game Action Functionality
+	def congratulations(self, player):
+		print "Congratulations %s, you have won the game!" % player
+
+	def takeTurn(self, player):
+		pass
+
+	# End Game Action Functionality
+
+	# Game Status Functionality
+	def gameOver(self, player):
+		pass
+	# End Game Status Functionality
+
+	def gameStart(self):
 		self.dealHands()
-		self.listPlayersHands()
+		self.setCurrentPlayer(self.getPlayers()[0])
+
+		while true:
+			current_player = self.getCurrentPlayer()
+			if self.gameOver(current_player):
+				return self.congratulations(current_player)
+
+	def initialize(self):
+		self.gameStart()
