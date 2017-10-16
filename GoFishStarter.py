@@ -13,6 +13,7 @@
 # * The game is over when all 13 sets of four, books, have been matched
 # * The player with the most books is determined the winner
 from random import shuffle as shuffle
+from time import sleep as sleep
 
 from Modules.Cards.Card import Card
 from Modules.Cards.Deck import Deck
@@ -21,35 +22,63 @@ from Modules.Players.Bot import Bot
 from Modules.Engine import Engine
 
 class GoFishStarter:
-	def __init__(self):
+	def __init__(self, test = False):
 		self.deck = Deck().initialize()
 		self.players = []
 		self.engine = Engine()
+		self.player_no = False
+		self.test = test
 
 	# Code for addition of players and general player code
 	def getPlayers(self):
 		return self.players
 
 	def getPlayerN(self):
-		return len(self.getPlayers)
+		return self.player_no
+
+	def setPlayerN(self, n):
+		self.player_no = n
+
+	def askPlayerNames(self, player_n):
+		names = False
+		while not names:
+			name_flag = str(raw_input("Would you like to name yourselves (Y/N)?: ")).lower()
+			# if not (name_flag == 'y') or not (name_flag == 'n'):
+			# 	print "Please input 'y' or 'n'"
+			# else:
+			names = []
+			if name_flag:
+				print "Okay, please input the names for each player: "
+				for i in range(player_n):
+					i_name = raw_input("Player #%c: " % (i + 1))
+					names.append(i_name)
+
+					if (i == player_n - 1):
+						break
+
+
+		return names
 
 	def addPlayer(self, player):
 		self.players.append(player)
 
-	def addPlayers(self, player_n, bot_n):
+	def addAllPlayers(self, player_n, bot_n):
 		player_bucket = []
-		player_obj = Player()
 		bot_obj = Bot()
 
-		player_names = False
+		player_names = self.askPlayerNames(player_n)
 
 		for i in range(player_n):
-			player_bucket.append(player_obj)
+			if player_names:
+				player_bucket.append(Player(player_names[i]))
+			else:
+				player_bucket.append(Player())
 
 		for i in range(bot_n):
 			player_bucket.append(bot_obj)
 
-		shuffle(player_bucket)
+		if not self.test:
+			shuffle(player_bucket)
 
 		for p in player_bucket:
 			self.addPlayer(p)
@@ -61,7 +90,10 @@ class GoFishStarter:
 	def askBotN(self):
 		bot_n = False
 		# The number to fill up the card table
-		tot_bots = 4 - self.getPlayerN
+		try:
+			tot_bots = 4 - self.getPlayerN()
+		except:
+			raise Exception("Error with getting the # of players")
 		if tot_bots == 0:
 			return False
 		if tot_bots < 2:
@@ -76,7 +108,7 @@ class GoFishStarter:
 			if not t_bot_n:
 				bot_n = 1
 				break
-			else
+			else:
 				if t_bot_n > tot_bots:
 					print "You can't have more than %s bots right now" % tot_bots
 				else:
@@ -89,6 +121,7 @@ class GoFishStarter:
 		player_n = False
 		
 		while True:
+			t_player_n = False
 			try:
 				t_player_n = int(raw_input("Please enter the number of human players: "))
 			except:
@@ -107,13 +140,31 @@ class GoFishStarter:
 					break
 		return player_n
 
+	def handlePlayerInit(self):
+		# Returns: Void
+		try:
+			player_n = self.askPlayerN()
+			self.setPlayerN(player_n)
+			return self.getPlayerN()
+		except:
+			raise Exception("There is a problem in `handlePlayerInit()`")
+	
+	def handleBotInit(self):
+		try:
+			bot_n = self.askBotN()
+			return bot_n
+		except:
+			raise Exception("There was an error initializing the bots")
+
 	# End Code for Addition of Players
 	def initializeGoFish(self):
+		if self.test:
+			print "This is now in test mode"
+			sleep(2)
 		print "Welcome to another round of the famous game, Go Fish!"
-		player_n = self.askPlayerN()
-		bot_n = self.askBotN()
-		# After asking, add the players to `self.players`
-		self.addPlayers(player_n, bot_n)
+		player_n = self.handlePlayerInit()
+		bot_n = self.handleBotInit()
+		self.addAllPlayers(player_n, bot_n)
 
 if __name__ == "__main__":
 	GoFishStarter().initializeGoFish()

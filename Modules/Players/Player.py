@@ -1,19 +1,19 @@
 class Player:
 	"""Player object, All the commands that the player will use in the game are here."""
-	def __init__(self):
+	def __init__(self, name = False):
 		self.hand = False
-		self.name = False
+		self.name = name
+
+	def __eq__(self, other):
+		return self.name == other.name
 
 	def __repr__(self):
-		return self.name or "Player"
+		return str(self.name) or "Player"
 
 	def __str__(self):
 		if type(self.name) == int:
 			return "Player #%s" % self.name
-		return self.name or "Player"
-
-	def setName(self, name):
-		self.name = name
+		return "'%s'" % self.name or "Player"
 		
 	def sortHand(self):
 		for i in range(1, len(self.hand)):
