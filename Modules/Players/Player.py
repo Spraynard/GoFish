@@ -55,8 +55,10 @@ class Player(object):
 		return self.hand
 
 # Code for player specific TRADING PHASE operations
+	def hasSpecificCard(self, card):
+		pass
 
-	def hasCardRank(self, rank):
+	def hasCard(self, rank):
 		# Non variant version of hasCard.
 		# This version just plain checks to see if the player has
 		# 	any cards of given rank in their hands.
@@ -66,7 +68,7 @@ class Player(object):
 			rank_hand.append(c.getRank())
 		return rank in rank_hand
 
-	def countCardRank(self, rank):
+	def countCards(self, rank):
 		hand = self.getHand()
 		counter = 0
 		for c in hand:
@@ -108,5 +110,15 @@ class Player(object):
 
 	def removeCard(self, card):
 		self.hand.remove(card)
+
+	def drawSingleCard(self, deck):
+		# Summary: Draws a single card from the deck and then adds it to the player's hand
+		# Input: `Deck` - The deck being used by the players. 
+		# Return: Void
+		try:
+			card = deck.pop()
+			self.takeCard(card)
+		except:
+			return False
 
 # End TRADING PHASE operation code

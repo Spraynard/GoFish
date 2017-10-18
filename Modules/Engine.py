@@ -157,7 +157,7 @@ class Engine:
 				rank = str(raw_input("What card rank do you want to ask for (e.g. 2 - Ace)?: ")).lower().title()
 				if not rank in correctInputDict['ranks']:
 					print "That is not an acceptable card rank. Please choose again"
-				else if not player.hasCardRank(rank):
+				else if not player.hasCard(rank):
 					print "You don't even have any of those cards in your hand! Try again."
 				else:
 					return rank
@@ -190,16 +190,17 @@ class Engine:
 
 
 		print "\"Hey %s, Do you have any %ss?\"" % (otherPlayer, rank)
-		if otherPlayer.hasCardRank(rank):
+		if otherPlayer.hasCard(rank):
 			# Count how many cards there are of that rank in the player's hand
 			# 	give feedback based on the amount of cards.
 			goodGuess = True
-			cardCount = otherPlayer.countCardRank(rank)
+			cardCount = otherPlayer.countCards(rank)
 			giveArray = otherPlayer.giveCards(rank, cardCount)
+			
 			if isinstance(otherPlayer, Bot):
 				print otherPlayer.exclaim() % (cardCount, giveArray)
 			else:
-				print 
+				print "I do have %s cards. Here they are: %s" % (cardCount, giveArray)
 
 			player.takeCards(giveArray)
 		else:
@@ -209,10 +210,20 @@ class Engine:
 				print otherPlayer.tauntPlayer()
 			else:
 				print "\"I sure do not %s\"" % player
+			player.drawSingleCard(self.getDeck())
+
+		return goodGuess
 
 
-	def endPhase(self, player):
-		pass
+	def endPhase(self, player, goodGuess):
+		if goodGuess:
+			# If the player has a good guess (e.g. they asked another player for a card that they
+			# 	had in their hand and they actually had one or more of those cards in their hand)
+			self.takeTurn(player)
+		else:
+			# If the player had to draw from the pile because they guessed badly.
+			# self.scanHand(player)
+			# self.setTricks(player:
 
 	# End Phase Codes
 	def takeTurn(self, player):
@@ -230,7 +241,8 @@ class Engine:
 		# 	- If four tricks, player wins
 		self.initialPhase(player)
 		(rank, other) = self.decisionPhase(player)
-		self.tradingPhase(player, (rank, other))
+		goodGuess = self.tradingPhase(player, (rank, other))
+		endPhase(player, goodGuess)
 
 	
 	def endTurn(self):
