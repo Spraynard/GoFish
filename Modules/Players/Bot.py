@@ -1,8 +1,9 @@
-from Player import Player
+from HumanPlayer import HumanPlayer
 
-class Bot(Player):
+class Bot(HumanPlayer):
 	"""Bot object, which is a player. There are taunts available to bots to rouse up the player whenver they make a mistake"""
-	def __init__(self):
+	def __init__(self, name = False):
+		super(Bot, self).__init__()
 		self.taunts = ["You're going to have to try harder than that!\"",
 						"I thought that I was playing a real person, not a bot!\"",
 						"What the heck are you doing?\"",
@@ -13,9 +14,6 @@ class Bot(Player):
 		self.exclamations = ["\"Dammit, I have %s cards of that rank. Here's your damn cards: %s\"",
 							 "\"Wow, you're really good at this! I have %s cards of that rank. Here they are you scallywag: %s\"",
 							 "\"Are you cheating? I have %s cards of that rank. Take em ya dingus! %s\""]
-
-		self.name = False
-		self.hand = False
 
 	def __repr__(self):
 		return self.name or "Bot"

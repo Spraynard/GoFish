@@ -15,22 +15,23 @@
 from random import shuffle as shuffle
 from time import sleep as sleep
 
-from Modules.Cards.Card import Card
-from Modules.Cards.Deck import Deck
-from Modules.Players.Player import Player
-from Modules.Players.Bot import Bot
-from Modules.Engine import Engine
+import sys
+
+sys.path.append('Modules/')
+sys.path.append('Modules/Cards/')
+sys.path.append('Modules/Players/')
+
+from Card import Card
+from HumanPlayer import HumanPlayer
+from Bot import Bot
+from Engine import Engine
 
 class GoFishStarter:
 	def __init__(self, test = False):
-		self.deck = Deck().initialize()
 		self.players = []
 		self.engine = Engine()
 		self.player_no = False
 		self.test = test
-
-	def getDeck(self):
-		return self.deck
 
 	# Code for addition of players and general player code
 	def getPlayers(self):
@@ -73,9 +74,9 @@ class GoFishStarter:
 
 		for i in range(player_n):
 			if player_names:
-				player_bucket.append(Player(player_names[i]))
+				player_bucket.append(HumanPlayer(player_names[i]))
 			else:
-				player_bucket.append(Player())
+				player_bucket.append(HumanPlayer())
 
 		for i in range(bot_n):
 			player_bucket.append(bot_obj)
@@ -163,7 +164,6 @@ class GoFishStarter:
 
 	def startGame(self):
 		self.engine.setPlayers(self.getPlayers())
-		self.engine.setDeck(self.getDeck())
 		self.engine.initialize()
 
 	def initializeGoFish(self):

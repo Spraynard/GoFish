@@ -26,9 +26,13 @@ class Card:
 		
 	"""
 
-	def __init__(self, rank, suit):
+	def __init__(self, rank = False, suit = False):
 		self.rank = str(rank)
 		self.suit = suit
+		self.acceptDict = {
+			'suits' : ["Clubs", "Spades", "Diamonds", "Hearts"],
+			'ranks' : ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
+		}
 
 	def __eq__(self, other):
 		return (self.rank == other.rank) and (self.suit == other.suit)
@@ -49,8 +53,14 @@ class Card:
 	def __str__(self):
 		return self.rank + " of " + self.suit
 
+	def getAcceptDict(self):
+		return self.acceptDict
+
 	def getRank(self):
 		return self.rank
+
+	def acceptableRank(self, rank):
+		return self.getRank() in self.getAcceptDict()['ranks']
 
 	def getSuit(self):
 		return self.suit
