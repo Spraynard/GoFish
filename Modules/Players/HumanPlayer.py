@@ -3,9 +3,9 @@ class HumanPlayer(object):
 	def __init__(self, name = False):		
 		import uuid
 
-		self.hand = False
+		self.hand = []
 		self.name = name
-		self.tricks = False
+		self.tricks = 0
 
 		# Internal Player's Responses to questions posed by engine
 		self.guess = False
@@ -47,7 +47,7 @@ class HumanPlayer(object):
 	# |_____________End Player to Player Interaction Functionality-----------|
 	# Guess Functionalty
 
-	def setGuess(self, bool)
+	def setGuess(self, bool):
 		if not type(bool) == bool:
 			raise Exception("You have to set a boolean value (True/False)")
 		self.guess = bool
@@ -86,7 +86,20 @@ class HumanPlayer(object):
 		return False
 
 	def showHand(self):
-		return self.hand
+		return self.getHand()
+
+	def countHand(self):
+		return len(self.getHand())
+
+	def drawCard(self, deck):
+		# Summary: Draws a single card from the deck and then adds it to the player's hand
+		# Input: `Deck` - The deck being used by the players. 
+		# Return: Void if everything goes alright. False if shit is messed up
+		self.takeCard(deck.draw())
+
+	def drawHand(self, deck):
+		for i in range(7):
+			self.drawCard(deck)
 
 	# NEEDS ATTENTION - OCTOBER 17th, 2017
 	def sortHand(self):
@@ -111,20 +124,6 @@ class HumanPlayer(object):
 	def takeRelevantCards(self, cardArray):
 		for c in cardArray:
 			self.takeCard(c)
-
-	def drawSingleCard(self, deck):
-		# Summary: Draws a single card from the deck and then adds it to the player's hand
-		# Input: `Deck` - The deck being used by the players. 
-		# Return: Void
-		try:
-			card = deck.pop()
-			self.takeCard(card)
-		except:
-			return False
-
-	def drawHand(self, deck):
-		for i in range(7):
-			self.drawSingleCard(deck)
 
 	# |--------End Drawing or Taking Cards Functionality-----|
 

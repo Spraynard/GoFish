@@ -3,9 +3,9 @@ import unittest
 import os
 import sys
 
-sys.path.append('../../') 
-sys.path.append('../../Modules/Players/')
-sys.path.append('../../Modules/Cards/')
+sys.path.append('../') 
+sys.path.append('../Modules/Players/')
+sys.path.append('../Modules/Cards/')
 
 from GoFishStarter import GoFishStarter
 from Player import Player

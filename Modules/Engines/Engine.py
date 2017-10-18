@@ -1,13 +1,19 @@
 import sys
 
-sys.path.append('../Cards/')
-class Engine:
+sys.path.append('../../Modules/Cards/')
+sys.path.append('../../Modules/Players/')
+
+from Deck import Deck
+from Card import Card
+
+class Engine(object):
 	# Controls the start, turn, and checks of the actual game.
-	def __init__(self):
-		self.players = False
-		self.deck = False
+	def __init__(self, test = False):
+		self.players = None
+		self.deck = None
 		self.playerIndex = 0
-		self.variant = False
+		self.variant = None
+		self.test = test
 
 # All Engines will have this obtaining and setting deck functionality
 	def getDeck(self):
@@ -19,8 +25,8 @@ class Engine:
 		# Summary: Sets
 		# Input: `new_deck` - The new value of the deck object I want to set to
 		# Returns: Void
-		from Cards.Deck import Deck
 		self.deck = Deck()
+		self.getDeck().initialize()
 
 # All Engines will handle getting and setting current players with this functionality
 	def getPlayers(self):

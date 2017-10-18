@@ -1,11 +1,16 @@
 import sys
 
-sys.path.append('../Cards')
+sys.path.append('../')
+sys.path.append('../../Cards')
+sys.path.append('../../Players')
 
-from Engine import Engine
+from Engine import *
+
+from HumanPlayer import HumanPlayer
+from Bot import Bot
 
 class GoFishEngine(Engine):
-	def __init__(self):
+	def __init__(self, test = False):
 		super(GoFishEngine, self).__init__()
 
 	# Game Action Functionality
@@ -19,8 +24,8 @@ class GoFishEngine(Engine):
 		else:
 			print "You currently have 0 tricks"
 
-	def displayhand(self, player):
-		player.showHand()
+	def displayHand(self, player):
+		print player.showHand()
 
 	def displayCurrentPlayerInfo(self, player):
 		if isinstance(player, Bot):
@@ -65,6 +70,7 @@ class GoFishEngine(Engine):
 				#  2. Of cards that bot has, look for the rank in which you have the most of.
 				#  2a. If you have multiple ranks with the same amount, break by choosing randomly
 				#  3. As for the selected rank from an opponent.
+				pass
 		else:
 			rank = False
 			# suit = False
@@ -75,7 +81,7 @@ class GoFishEngine(Engine):
 					flagCard = Card(rank)
 					if not testCard.acceptableRank():
 						print "That is not an acceptable card rank. Please choose again"
-					else if not player.hasCard(flagCard):
+					elif not player.hasCard(flagCard):
 						print "You don't even have any of those cards in your hand! Try again."
 					else:
 						player.setChosenCard(Card(rank))
@@ -169,7 +175,7 @@ class GoFishEngine(Engine):
 
 		player.resetChosenVariables()
 
-	def endPhase(self, player, goodGuess):
+	def endPhase(self, player):
 		if player.gotGuess():
 			# If the player has a good guess (e.g. they asked another player for a card that they
 			# 	had in their hand and they actually had one or more of those cards in their hand)
@@ -201,4 +207,4 @@ class GoFishEngine(Engine):
 		self.initialPhase(player)
 		self.decisionPhase(player)
 		self.tradingPhase(player)
-		self.endPhase(player, goodGuess)
+		self.endPhase(player)

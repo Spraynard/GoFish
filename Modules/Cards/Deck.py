@@ -1,45 +1,46 @@
 import random
 
-from Card import Card
-
-class Deck:
+class Deck(object):
 	""" The deck object which holds all the cards the players will be using"""
 	def __init__(self):
-		self.deck = False
+		self.cards = []
 
-	def setDeck(self, deck):
-		self.deck = deck
+	def _shuffleCards(self):
+		random.shuffle(self.getCards())
 
-	def getDeck(self):
-		return self.deck
+	def _addCard(self, card):
+		self.getCards().append(card)
 
-	def buildDeck(self):
-		deckHolder = []
-		cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
+	def _buildDeck(self):
+		from Card import Card
+
+		ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
 		suits = ["Clubs", "Spades", "Diamonds", "Hearts"]
 
 		for s in suits:
-			for c in cards:
-				deckHolder.append(Card(c,s))
+			for r in ranks:
+				card = Card(r, s)
+				self._addCard(card)
 
-		random.shuffle(deckHolder)
+	# Drawing from the deck
+	def draw(self):
+		return self.getCards().pop()
 
-		return deckHolder
+	def getCards(self):
+		return self.cards
 
 	def currentAmount(self):
-		return len(self.deck)
+		return len(self.getCards())
 
 	def listCards(self):
-		for i in range(0, len(self.deck)):
-			print self.deck[i]
+		for i in range(0, len(self.getCards())):
+			print self.getCards()[i]
 
 	def hasCard(self, card):
-		if card in self.deck:
+		if card in self.getCards():
 			return True
 		return False
 
 	def initialize(self):
-		deck = self.buildDeck()
-		self.setDeck(deck)
-		return self.getDeck()
-
+		self._buildDeck()
+		self._shuffleCards()
