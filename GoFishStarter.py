@@ -29,6 +29,9 @@ class GoFishStarter:
 		self.player_no = False
 		self.test = test
 
+	def getDeck(self):
+		return self.deck
+
 	# Code for addition of players and general player code
 	def getPlayers(self):
 		return self.players
@@ -50,7 +53,7 @@ class GoFishStarter:
 			if name_flag:
 				print "Okay, please input the names for each player: "
 				for i in range(player_n):
-					i_name = raw_input("Player #%c: " % (i + 1))
+					i_name = raw_input("Player #%s: " % (i + 1))
 					names.append(i_name)
 
 					if (i == player_n - 1):
@@ -157,6 +160,12 @@ class GoFishStarter:
 			raise Exception("There was an error initializing the bots")
 
 	# End Code for Addition of Players
+
+	def startGame(self):
+		self.engine.setPlayers(self.getPlayers())
+		self.engine.setDeck(self.getDeck())
+		self.engine.initialize()
+
 	def initializeGoFish(self):
 		if self.test:
 			print "This is now in test mode"
@@ -165,6 +174,7 @@ class GoFishStarter:
 		player_n = self.handlePlayerInit()
 		bot_n = self.handleBotInit()
 		self.addAllPlayers(player_n, bot_n)
+		self.startGame()
 
 if __name__ == "__main__":
 	GoFishStarter().initializeGoFish()
