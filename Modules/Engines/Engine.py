@@ -32,6 +32,9 @@ class Engine(object):
 	def getPlayers(self):
 		return self.players
 
+	def getPlayerAmount(self):
+		return len(self.players)
+		
 	def setPlayers(self, players):
 		self.players = players
 
@@ -55,8 +58,7 @@ class Engine(object):
 		# Will stop when there is a player that has gotten the winning conditions of the game
 		while not self.gameOver():
 			# Getting the current player for the turn
-			current_player = self.getCurrentPlayer()
-			self.takeTurn(current_player)
+			self.takeTurn()
 
 # All Engines will have a game that will end :)
 	def gameOver(self):

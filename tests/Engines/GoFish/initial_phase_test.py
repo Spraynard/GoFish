@@ -1,18 +1,19 @@
 import sys
 import unittest
 
-sys.path.append('../../Modules/Players/')
-sys.path.append('../../Modules/Engines/')
+sys.path.append('../../../Modules/Players/')
+sys.path.append('../../../Modules/Engines/')
+sys.path.append('../../../Modules/Cards/')
 
-from HumanPlayer import HumanPlayer
 from Bot import Bot
-
+from HumanPlayer import HumanPlayer
+from GoFishCard import GoFishCard as Card
 from GoFish.TestGoFishEngine import TestGoFishEngine
 
-
-class GoFishEngineTests(unittest.TestCase):
+class InitialPhaseEngineTests(unittest.TestCase):
+	
 	def setUp(self):
-		self.humanPlayer = HumanPlayer()
+		self.humanPlayer = HumanPlayer().randomName()
 		self.botPlayer = Bot()
 		self.engine = TestGoFishEngine(True)
 
@@ -23,14 +24,22 @@ class GoFishEngineTests(unittest.TestCase):
 		self.engine.setPlayers([self.humanPlayer])
 		self.engine.initialize()
 
+		# Make sure only one player
+		self.assertIs(self.engine.getPlayerAmount(), 1);
 		# Want to get the first hand that could possibly be dealt.
 		# 	this will be the hand that the player gets, supposedly
 		acceptHand = self.engine.returnFirstHand()
+
+		# Make sure I'm not actually drawing from the deck before the player draws
+		self.assertIs(self.engine.getDeck().currentAmount(), 52)
 
 		# These variables contain strings which will will be what
 		# 	this test is looking to assert equality to
 		acceptTrickOutput = "You currently have 0 tricks"
 		acceptHandOutput = "%s" % acceptHand
+
+		# Deal out the hands now
+		self.engine.dealHands()
 
 		# This goes through the initial phase of the engine
 		self.engine.initialPhase(self.humanPlayer)
@@ -47,21 +56,26 @@ class GoFishEngineTests(unittest.TestCase):
 		self.assertEqual(givenHandOutput, acceptHandOutput)
 
 	def test_initial_phase_multiple_tricks(self):
-		pass
+		# Player is going to start out with 2 tricks on this initial phase test
+		for i in range(2):
+			self.humanPlayer.addTrick()
 
-	def test_decision_phase(self):
-		pass
+		self.engine.setPlayers([self.humanPlayer])
+		self.engine.initialize()
 
-	def test_trading_phase(self):
-		pass
+		acceptTrickOutput = "You currently have 2 tricks"
 
-	def test_end_phase(self):
-		pass
+		self.engine.dealHands()
+		self.engine.initialPhase(self.humanPlayer)
+
+		givenTrickOutput = sys.stdout.getvalue().strip().split('\n')[0]
+
+		self.assertEqual(givenTrickOutput, acceptTrickOutput)
 
 	def tearDown(self):
 		self.humanPlayer = None
 		self.botPlayer = None
 		self.engine = None
-
+		
 if __name__ == '__main__':
 	unittest.main(verbosity=2, buffer=True)

@@ -20,13 +20,13 @@ def cardSuitRank(suit):
 	elif suit == "Spades":
 		return 3
 
-class Card:
+class Card(object):
 	""" Card class, which gives all the behavior of the card object. Takes in a rank (e.g. 2 - Ace) and a 
 		suit (e.g. "Spades", "Clubs") and makes a card object off of that with those values
 		
 	"""
 
-	def __init__(self, rank = False, suit = False):
+	def __init__(self, rank = None, suit = None):
 		self.rank = str(rank)
 		self.suit = suit
 		self.acceptDict = {
@@ -36,6 +36,9 @@ class Card:
 
 	def __eq__(self, other):
 		return (self.rank == other.rank) and (self.suit == other.suit)
+
+	def isSameRank(self, other):
+		return self.rank == other.rank
 
 	def __lt__(self, other):
 		c1 = cardSuitRank(self.suit), cardRankToNum(self.rank)
@@ -59,15 +62,8 @@ class Card:
 	def getRank(self):
 		return self.rank
 
-	def acceptableRank(self, rank):
+	def acceptableRank(self):
 		return self.getRank() in self.getAcceptDict()['ranks']
 
 	def getSuit(self):
 		return self.suit
-
-	def cardJs(self):
-		cardrank = {
-			"rank" : self.rank,
-			"suit" : self.suit
-		}
-		return cardrank
