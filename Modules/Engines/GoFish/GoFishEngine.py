@@ -158,6 +158,9 @@ class GoFishEngine(Engine):
 
 		player.resetChosenVariables()
 
+	def winConditionsMet(self):
+		return self.getMasterTrickCount() == 13
+
 	def endPhase(self, player):
 		if player.gotGuess():
 			# If the player has a good guess (e.g. they asked another player for a card that they
@@ -165,14 +168,21 @@ class GoFishEngine(Engine):
 
 			# Resetting the player's guess for next turn :)
 			player.resetGuess()
-			self.takeTurn()
 		else:
 			# If the player had to draw from the pile because they guessed badly.
+			
+			# Eh this is weird.
+			# Not sorted any time before?
 			player.sortHand()
+
 			player.lookForTricks()
 			player.setTricks(self.getMasterTrickCount())
 
 			self.addPlayerIndex()
+
+		if self.winConditionsMet():
+			self.toggleGameOver()
+		else:
 			self.takeTurn()
 
 

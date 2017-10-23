@@ -17,11 +17,8 @@ class Deck(object):
 	def _addCard(self, card):
 		self.getCards().append(card)
 
-	def _buildDeck(self, variant = None):
-		if variant:
-			from Card import Card
-		else:
-			from GoFishCard import GoFishCard as Card
+	def _buildDeck(self):
+		from Card import Card
 
 		ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
 		suits = ["Clubs", "Spades", "Diamonds", "Hearts"]
