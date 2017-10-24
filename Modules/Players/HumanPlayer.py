@@ -119,7 +119,7 @@ class HumanPlayer(object):
 		return self.guess
 
 	def resetGuess(self):
-		self.setGuess("False")
+		self.setGuess(False)
 
 	def guessedCorrectly(self):
 		self.setGuess(True)
@@ -132,6 +132,7 @@ class HumanPlayer(object):
 		self.tricks += 1
 
 	def addTotalTrick(self, trickRef):
+		print "Trick ref should go up!"
 		trickRef += 1
 
 	def getTricks(self):
@@ -176,7 +177,6 @@ class HumanPlayer(object):
 		while not len(tH) == 0:
 			self.addPlayerTrick()
 			self.addTotalTrick(trickRef)
-
 			t = tH.pop()
 			self.delTrickFromHand(t)
 
@@ -221,7 +221,9 @@ class HumanPlayer(object):
 
 	def populateSortingDict(self):
 		sortingDict = self.getSortingDict()
-
+		hand = self.getHand()
+		if self.countHand == 0:
+			return
 		for c in self.getHand():
 			cardRank = c.getRank()
 			if not cardRank in sortingDict:

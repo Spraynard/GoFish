@@ -39,6 +39,27 @@ class TestGoFishEngine(GoFishEngine):
 	def chooseCard(self, player):
 		return super(TestGoFishEngine, self).chooseCard(player)
 
+	def endPhase(self, player):
+		player.sortHand()
+		player.lookForTricks()
+		player.setTricks(self.getMasterTrickCount())	
+
+		if player.gotGuess():
+			# If the player has a good guess (e.g. they asked another player for a card that they
+			# 	had in their hand and they actually had one or more of those cards in their hand)
+
+			# Resetting the player's guess for next turn :)
+			player.resetGuess()
+		else:
+			# If the player had to draw from the pile because they guessed badly.
+			self.addPlayerIndex()
+
+		if self.winConditionsMet():
+			self.toggleGameOver()
+		else:
+			return
+			# self.takeTurn()
+
 	def initialize(self):
 		# Don't want to start a game unless specifically
 		# 	tell it that I want to start the game in the test.

@@ -7,7 +7,7 @@ sys.path.append('../../../Modules/Cards/')
 
 from Bot import Bot
 from HumanPlayer import HumanPlayer
-from GoFishCard import GoFishCard as Card
+from Card import Card
 from GoFish.TestGoFishEngine import TestGoFishEngine
 
 # Question: How can I test the end phase?
@@ -39,10 +39,35 @@ class EndPhaseEngineTests(unittest.TestCase):
 
 	# Insert Tests Here
 	def testEndPhaseCorrect(self):
-		pass
+		# Set a player up with a correct guess, then test and see if that guess got reset.
+		# 	This needs to happen before a player takes a turn
+		self.humanPlayer.setGuess(True)
+
+		self.engine.endPhase(self.humanPlayer)
+
+		self.assertTrue(self.humanPlayer.gotGuess() == False)
 
 	def testEndPhaseCorrectOneTrick(self):
-		pass
+		# Set a player up with a correct guess and a hand that contains one trick.
+		hand = [
+			Card("A", "Spades"),
+			Card("A", "Hearts"),
+			Card("A", "Diamonds"),
+			Card("A", "Clubs")
+		]
+
+		self.humanPlayer.takeRelevantCards(hand)
+		self.assertTrue(self.humanPlayer.countHand() == 4)
+		self.humanPlayer.setGuess(True)
+		self.assertTrue(self.humanPlayer.gotGuess() == True)
+
+		self.engine.endPhase(self.humanPlayer)
+
+		self.assertTrue(self.humanPlayer.gotGuess() == False)
+		self.assertTrue(self.humanPlayer.countHand() == 0)
+		self.assertTrue(self.humanPlayer.getTricks() == 1)
+		print self.engine.getMasterTrickCount()
+		self.assertTrue(self.engine.getMasterTrickCount() == 1)
 
 	def testEndPhaseCorrectMultipleTricks(self):
 		pass

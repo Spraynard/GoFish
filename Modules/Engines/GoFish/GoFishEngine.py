@@ -167,9 +167,10 @@ class GoFishEngine(Engine):
 		return self.getMasterTrickCount() == 13
 
 	def endPhase(self, player):
+		master_trick_count = self.getMasterTrickCount()
 		player.sortHand()
 		player.lookForTricks()
-		player.setTricks(self.getMasterTrickCount())	
+		player.setTricks(master_trick_count)	
 
 		if player.gotGuess():
 			# If the player has a good guess (e.g. they asked another player for a card that they
