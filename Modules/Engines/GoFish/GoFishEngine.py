@@ -152,9 +152,14 @@ class GoFishEngine(Engine):
 	def tradingPhase(self, player):		
 		self.askForCardRank(player)
 		# Player state is valuable after they ask for card.
+		deck = self.getDeck()
+
 		if not player.gotGuess():
-			deck = self.getDeck()
-			player.drawCard(deck)
+			if (player.countHand() == 0) and (deck.currentAmount() == 0):
+				print "Hey everyone, laugh at %s! They got kicked out of the game for losing!" % player
+				self.removePlayer(player)
+			else:
+				player.drawCard(deck)
 
 		player.resetChosenVariables()
 
@@ -162,6 +167,10 @@ class GoFishEngine(Engine):
 		return self.getMasterTrickCount() == 13
 
 	def endPhase(self, player):
+		player.sortHand()
+		player.lookForTricks()
+		player.setTricks(self.getMasterTrickCount())	
+
 		if player.gotGuess():
 			# If the player has a good guess (e.g. they asked another player for a card that they
 			# 	had in their hand and they actually had one or more of those cards in their hand)
@@ -170,14 +179,6 @@ class GoFishEngine(Engine):
 			player.resetGuess()
 		else:
 			# If the player had to draw from the pile because they guessed badly.
-			
-			# Eh this is weird.
-			# Not sorted any time before?
-			player.sortHand()
-
-			player.lookForTricks()
-			player.setTricks(self.getMasterTrickCount())
-
 			self.addPlayerIndex()
 
 		if self.winConditionsMet():

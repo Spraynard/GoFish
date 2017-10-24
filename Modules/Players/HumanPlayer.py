@@ -207,6 +207,8 @@ class HumanPlayer(object):
 		# Summary: Draws a single card from the deck and then adds it to the player's hand
 		# Input: `Deck` - The deck being used by the players. 
 		# Return: Void if everything goes alright. False if shit is messed up
+		if deck.currentAmount() == 0:
+			return
 		self.takeCard(deck.draw())
 
 	def drawHand(self, deck):

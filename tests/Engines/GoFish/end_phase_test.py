@@ -16,7 +16,9 @@ from GoFish.TestGoFishEngine import TestGoFishEngine
 # 
 # 		1. If Player was able to correctly guess a card in another player's hand:
 # 			- Internal player class state relating to guesses is RESET.
-# 			- The same player is able to take another turn of the game!
+# 			- Any tricks in the player's hand are taken out.
+# 			- The same player is able to take another turn of the game if the game is not ended
+# 			- If the game is ended we end that shit.
 # 		
 # 		2. If Player did not correctly guess a card in another player's hand:
 # 			- Player sorts their hand; populating internal player sortDict in the process
@@ -24,6 +26,9 @@ from GoFish.TestGoFishEngine import TestGoFishEngine
 # 			- Player then `sets the tricks`. Upticking internal player trick count, as well as
 # 				the engine's master trick count.
 # 			- Player index is upticked, causing the next player to be available for the next turn
+# 
+# 		3. Game ends if 13 tricks are made. 13 * 4 = 52 so that means that all cards are down on the table
+# 			- The player with the most tricks wins the game!
 # 			
 class EndPhaseEngineTests(unittest.TestCase):
 	
@@ -33,7 +38,28 @@ class EndPhaseEngineTests(unittest.TestCase):
 		self.engine = TestGoFishEngine(True)
 
 	# Insert Tests Here
-	def testEndPhase(self):
+	def testEndPhaseCorrect(self):
+		pass
+
+	def testEndPhaseCorrectOneTrick(self):
+		pass
+
+	def testEndPhaseCorrectMultipleTricks(self):
+		pass
+
+	def testEndPhaseCorrectEndGame(self):
+		pass
+
+	def testEndPhaseIncorrectNoTricks(self):
+		pass
+
+	def testEndPhaseIncorrectOneTrick(self):
+		pass
+
+	def testEndPhaseIncorrectMultipleTricks(self):
+		pass
+
+	def testEndPhaseIncorrectEndGame(self):
 		pass
 	
 	def tearDown(self):

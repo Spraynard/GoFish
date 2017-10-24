@@ -118,6 +118,46 @@ class TradingPhaseEngineTests(unittest.TestCase):
 		self.assertTrue(self.humanPlayer.countHand() == 1)
 		self.assertTrue(self.botPlayer.countHand() == 3)
 
+	def test_trading_phase_reject_player_loss(self):
+		from Deck import Deck
+
+		self.engine.deck = Deck()
+		self.engine.setPlayers([self.humanPlayer, self.botPlayer])
+
+		self.assertTrue(self.humanPlayer in self.engine.getPlayers())
+		
+		ask_card = Card(10, "Clubs")
+
+		bot_hand_card_array = [Card(5, "Clubs"), Card(5, "Spades"), Card(5, "Diamonds")]
+
+		self.botPlayer.takeRelevantCards(bot_hand_card_array)
+
+		self.humanPlayer.setChosenPlayer(self.botPlayer)
+
+		self.humanPlayer.setChosenCard(ask_card)
+
+		self.assertTrue(self.humanPlayer.countHand() == 0)
+
+		self.engine.tradingPhase(self.humanPlayer)
+
+		output = sys.stdout.getvalue().strip()
+		split_output = output.split('\n')
+		
+		output1 = split_output[0]
+		output2 = split_output[1]
+		output3 = split_output[2]
+
+		acceptOutput1 = "%s: \"Hey %s, Do you have any %ss?\"" % (self.humanPlayer.getName(), self.botPlayer, ask_card.getRank())
+		self.assertTrue(output1 == acceptOutput1, "Your output is not the same as what I am expecting\
+												\nPlayer: %s\n\
+												Chosen Player: %s\n\
+												Chosen Card: %s" % (self.humanPlayer.getName(), self.botPlayer, ask_card.getRank()))
+
+		acceptOutput3 = "Hey everyone, laugh at %s! They got kicked out of the game for losing!" % self.humanPlayer
+		self.assertTrue(output3 == acceptOutput3)
+
+		self.assertTrue(not self.humanPlayer in self.engine.getPlayers())
+
 	def tearDown(self):
 		self.humanPlayer = None
 		self.botPlayer = None

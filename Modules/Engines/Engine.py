@@ -39,6 +39,9 @@ class Engine(object):
 	def setPlayers(self, players):
 		self.players = players
 
+	def removePlayer(self, player):
+		players = self.getPlayers()
+		players.remove(player)
 
 	def _getPlayerIndex(self):
 		return self.playerIndex
