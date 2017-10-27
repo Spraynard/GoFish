@@ -58,7 +58,7 @@ class InitialPhaseEngineTests(unittest.TestCase):
 	def test_initial_phase_multiple_tricks(self):
 		# Player is going to start out with 2 tricks on this initial phase test
 		for i in range(2):
-			self.humanPlayer.addTrick()
+			self.humanPlayer.addPlayerTrick()
 
 		self.engine.setPlayers([self.humanPlayer])
 		self.engine.initialize()

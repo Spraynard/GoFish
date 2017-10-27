@@ -29,7 +29,16 @@ from GoFish.TestGoFishEngine import TestGoFishEngine
 # 
 # 		3. Game ends if 13 tricks are made. 13 * 4 = 52 so that means that all cards are down on the table
 # 			- The player with the most tricks wins the game!
-# 			
+#
+
+def spawnDupCards(cardList, suitList):
+	cardArray = []
+	for card in cardList:
+		for suit in suitList:
+			cardArray.append(Card(card, suit))
+
+	return cardArray
+
 class EndPhaseEngineTests(unittest.TestCase):
 	
 	def setUp(self):
@@ -70,19 +79,88 @@ class EndPhaseEngineTests(unittest.TestCase):
 		self.assertTrue(self.engine.getMasterTrickCount() == 1)
 
 	def testEndPhaseCorrectMultipleTricks(self):
-		pass
+		hand = spawnDupCards(["A", "J", "K", "Q"], ["Diamonds", "Spades", "Hearts", "Clubs"])
+		self.humanPlayer.takeRelevantCards(hand)
+		self.assertTrue(self.humanPlayer.countHand() == 16)
+		self.humanPlayer.setGuess(True)
+
+		self.assertTrue(self.humanPlayer.gotGuess() == True)
+
+		self.engine.endPhase(self.humanPlayer)
+
+		self.assertTrue(self.humanPlayer.gotGuess() == False)
+		self.assertTrue(self.humanPlayer.countHand() == 0)
+		self.assertTrue(self.humanPlayer.getTricks() == 4)
+		print self.engine.getMasterTrickCount()
+		self.assertTrue(self.engine.getMasterTrickCount() == 4)
 
 	def testEndPhaseCorrectEndGame(self):
-		pass
+		hand = spawnDupCards(["3"], ["Diamonds", "Spades", "Hearts", "Clubs"])
+		self.humanPlayer.takeRelevantCards(hand)
+		self.assertTrue(self.humanPlayer.countHand() == 4)
+		self.humanPlayer.setGuess(True)
+
+		self.assertTrue(self.humanPlayer.gotGuess() == True)
+
+		self.engine.trickCount = 12
+		self.assertTrue(self.engine.getMasterTrickCount() == 12)
+		self.engine.setPlayers([self.humanPlayer])
+
+
+		self.engine.endGameLoop(self.humanPlayer)
+		self.assertTrue(self.engine.getMasterTrickCount() == 13)
+		self.assertTrue(self.engine.endGame == True)
+
+		output = sys.stdout.getvalue().strip()
+
+
+		winningPhrase = """Congratulations %s, you have won the epic game of Go Fish with a trick count of %s. Make sure to tell all of your other friends (if you have any) that you won one of the most childish games in all the land!""" % (self.humanPlayer, 1)
+		self.assertEquals(output, winningPhrase)
 
 	def testEndPhaseIncorrectNoTricks(self):
-		pass
+		self.humanPlayer.takeRelevantCards([Card("A", "Spades")])
+		self.engine.setPlayers([self.humanPlayer, self.botPlayer])
+		self.assertTrue(self.engine.getPlayerAmount() == 2)
+		self.assertTrue(self.engine._getPlayerIndex() == 0)
+		self.engine.endPhase(self.humanPlayer)
+		self.assertTrue(self.engine._getPlayerIndex() == 1)
+
 
 	def testEndPhaseIncorrectOneTrick(self):
-		pass
+		hand = [
+			Card("A", "Spades"),
+			Card("A", "Hearts"),
+			Card("A", "Diamonds"),
+			Card("A", "Clubs")
+		]
+
+		self.humanPlayer.takeRelevantCards(hand)
+		self.engine.setPlayers([self.humanPlayer, self.botPlayer])
+		self.assertTrue(self.humanPlayer.countHand() == 4)
+		self.assertTrue(not self.humanPlayer.gotGuess())
+
+		self.engine.endPhase(self.humanPlayer)
+
+		self.assertTrue(not self.humanPlayer.gotGuess())
+		self.assertTrue(self.humanPlayer.countHand() == 0)
+		self.assertTrue(self.humanPlayer.getTricks() == 1)
+		print self.engine.getMasterTrickCount()
+		self.assertTrue(self.engine.getMasterTrickCount() == 1)
 
 	def testEndPhaseIncorrectMultipleTricks(self):
-		pass
+		hand = spawnDupCards(["A", "J", "K", "Q"], ["Diamonds", "Spades", "Hearts", "Clubs"])
+		self.humanPlayer.takeRelevantCards(hand)
+		self.engine.setPlayers([self.humanPlayer, self.botPlayer])
+		self.assertTrue(self.humanPlayer.countHand() == 16)
+		self.assertTrue(not self.humanPlayer.gotGuess())
+
+		self.engine.endPhase(self.humanPlayer)
+
+		self.assertTrue(not self.humanPlayer.gotGuess())
+		self.assertTrue(self.humanPlayer.countHand() == 0)
+		self.assertTrue(self.humanPlayer.getTricks() == 4)
+		print self.engine.getMasterTrickCount()
+		self.assertTrue(self.engine.getMasterTrickCount() == 4)
 
 	def testEndPhaseIncorrectEndGame(self):
 		pass
