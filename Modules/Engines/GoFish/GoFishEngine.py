@@ -4,8 +4,7 @@ sys.path.append('../')
 sys.path.append('../../Cards')
 sys.path.append('../../Players')
 
-from Engine import *
-
+from Engine import Engine
 from HumanPlayer import HumanPlayer
 from Bot import Bot
 
@@ -16,12 +15,19 @@ class GoFishEngine(Engine):
 
 	# Game Action Functionality
 	def getMasterTrickCount(self):
+		# Return Engine's total trick count
 		return self.trickCount
+		
+	def addMasterTrickCount(self, amount):
+		# Add the amount referenced in the amount param to the total trick count
+		self.trickCount += amount
 
 	def displayHand(self, player):
+		# Prints out the player's hand that is returned from a HumanPlayer's class method
 		print player.showHand()
 
 	def displayCurrentPlayerInfo(self, player):
+		# Give
 		if isinstance(player, Bot):
 			# No need to display if 
 			# 	the player is a bot
@@ -30,6 +36,8 @@ class GoFishEngine(Engine):
 		player.displayHand()
 
 	def playerAskLoop(self, choiceListLength):
+		# Based on the length of the choiceList.
+		# 	Allows me to ask for info from a player while also using DRY conventions!
 		choice = None
 		while True:
 			choice = int(raw_input("Please enter your choice: ")) - 1
@@ -40,14 +48,17 @@ class GoFishEngine(Engine):
 		return choice
 
 	def choosePlayerToAsk(self, player):
+		# Summary: Instructs the player to choose another player to ask for a card. This code also handles bots.
+		# Input: `Player` - A player object
+		# Returns: Void
 		choiceList = list(self.getPlayers())
 		choiceList.remove(player)
 		choice = False
 
 		if isinstance(player, Bot):
 			import random
-			# Implement Bot() player to ask
-			player.setChosenPlayer(random.choice(choiceList))
+			bot = player
+			bot.setChosenPlayer(random.choice(choiceList))
 		else:
 			# Implement Player() player to ask
 			print "Which player will you ask a card from?"
@@ -58,6 +69,8 @@ class GoFishEngine(Engine):
 		player.setChosenPlayer(choiceList[choice])
 
 	def chooseCard(self, player):
+		# Summary: Instructs players to choose a rank of card that they also have in their hand to eventually ask another player
+		# 	that is chosen.
 		from Card import Card
 
 		if isinstance(player, Bot):
@@ -66,7 +79,8 @@ class GoFishEngine(Engine):
 				#  2. Of cards that bot has, look for the rank in which you have the most of.
 				#  2a. If you have multiple ranks with the same amount, break by choosing randomly
 				#  3. As for the selected rank from an opponent.
-				player.chooseCard()
+				bot = player
+				bot.chooseCard()
 		else:
 			rank = None
 
@@ -81,6 +95,7 @@ class GoFishEngine(Engine):
 					else:
 						player.setChosenCard(Card(rank))
 						break
+			# This code is for when I implement any variants within the game. Do not pay attention to now.
 			# if self.variant == 1:
 			# 	suit = None
 			# 	while True:
@@ -91,6 +106,10 @@ class GoFishEngine(Engine):
 			# 			break
 
 	def askForCardRank(self, player):
+		# Summary: Once the player chooses a card rank and another player to ask,
+		# 		those values are stored in the player object and extracted in other code later on.
+		# Input: `player` - a player object, can be a humanplayer or a bot
+		# 
 		chosenPlayerCardCount = False
 		chosenPlayerGiveArray = False
 
@@ -105,7 +124,8 @@ class GoFishEngine(Engine):
 			player.guessedCorrectly()
 			chosenPlayer.concedeDefeat(chosenCard)
 			if isinstance(chosenPlayer, Bot):
-				chosenPlayer.talk('exclaim')
+				bot = chosenPlayer
+				bot.talk('exclaim')
 			else:
 				chosenPlayer.talk('defeat')
 			chosenPlayer.giveToPlayer(player)
@@ -113,14 +133,10 @@ class GoFishEngine(Engine):
 			if isinstance(chosenPlayer, Bot):
 				# If the other player is a bot, they will taunt the shit out of you
 				# 	and probably make you really sad af.
-				print chosenPlayer.tauntPlayer()
+				bot = chosenPlayer
+				print bot.tauntPlayer()
 			else:
 				chosenPlayer.talk('victory')
-				
-	def setTricks(self, player):
-		# Based on what was scanned, the player will take out the tricks within
-		# 	their hand and add it to their total trick count!
-		pass
 
 	# End Game Action Functionality
 
@@ -144,10 +160,12 @@ class GoFishEngine(Engine):
 	# Game Phases Here
 	def initialPhase(self, player):
 		self.displayCurrentPlayerInfo(player)
+		return None
 
 	def decisionPhase(self, player):
 		self.choosePlayerToAsk(player)
 		self.chooseCard(player)
+		return None
 
 	def tradingPhase(self, player):		
 		self.askForCardRank(player)
@@ -163,14 +181,16 @@ class GoFishEngine(Engine):
 
 		player.resetChosenVariables()
 
+		return None
+
 	def winConditionsMet(self):
 		return self.getMasterTrickCount() == 13
 
 	def endPhase(self, player):
-		master_trick_count = self.getMasterTrickCount()
 		player.sortHand()
 		player.lookForTricks()
-		player.setTricks(master_trick_count)	
+		tricks_added = player.setTricks()
+		self.addMasterTrickCount(tricks_added)
 
 		if player.gotGuess():
 			# If the player has a good guess (e.g. they asked another player for a card that they
@@ -180,13 +200,12 @@ class GoFishEngine(Engine):
 			player.resetGuess()
 		else:
 			# If the player had to draw from the pile because they guessed badly.
-			self.addPlayerIndex()
+			self._addPlayerIndex()
 
 		if self.winConditionsMet():
+			print "Win conditions are met mofo."
 			self.toggleGameOver()
-		else:
-			self.takeTurn()
-
+		return None
 
 	# End Game Phases
 
@@ -209,3 +228,11 @@ class GoFishEngine(Engine):
 		self.decisionPhase(player)
 		self.tradingPhase(player)
 		self.endPhase(player)
+
+		return None
+
+	def gameStart(self):
+		return super(GoFishEngine, self).gameStart()
+
+	def initialize(self):
+		return super(GoFishEngine, self).initialize()

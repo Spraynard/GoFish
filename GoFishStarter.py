@@ -20,16 +20,18 @@ import sys
 sys.path.append('Modules/')
 sys.path.append('Modules/Cards/')
 sys.path.append('Modules/Players/')
+sys.path.append('Modules/Engines/')
+sys.path.append('Modules/Engines/GoFish/')
 
 from Card import Card
 from HumanPlayer import HumanPlayer
 from Bot import Bot
-from Engine import Engine
+from GoFishEngine import GoFishEngine
 
 class GoFishStarter:
 	def __init__(self, test = False):
 		self.players = []
-		self.engine = Engine()
+		self.engine = GoFishEngine();
 		self.player_no = False
 		self.test = test
 

@@ -37,6 +37,8 @@ class Bot(HumanPlayer):
 			self._addChooseDict(c)
 
 	def _analyzeChooseDict(self):
+		# Haha, this is laughably bad AI for the bots.
+		#	Might as well have a random card generator for now
 		from Card import Card
 		maxCount = None
 		rankMax = None
@@ -51,6 +53,12 @@ class Bot(HumanPlayer):
 
 		self.setChosenCard(Card(rankMax))
 
+	def _randomChoice(self):
+		import random
+
+		hand = self.getHand()
+
+		self.setChosenCard(random.choice(hand))
 	# chooseDict Functionality
 	def _getChooseDict(self):
 		return self.chooseDict
@@ -64,7 +72,7 @@ class Bot(HumanPlayer):
 		if not cardRank in chooseDict:
 			chooseDict[cardRank] = []
 
-		chooseDict[card.getRank()].append(card)
+		chooseDict[cardRank].append(card)
 
 	def _resetChooseDict(self):
 		self.chooseDict = {}
@@ -75,4 +83,5 @@ class Bot(HumanPlayer):
 		#  2. Of cards that bot has, look for the rank in which you have the most of.
 		#  2a. If you have multiple ranks with the same amount, break by choosing randomly
 		self._assembleChooseDict()
-		self._analyzeChooseDict()
+		# self._analyzeChooseDict()
+		self._randomChoice()

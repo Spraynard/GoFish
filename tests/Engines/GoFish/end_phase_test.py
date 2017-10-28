@@ -163,7 +163,27 @@ class EndPhaseEngineTests(unittest.TestCase):
 		self.assertTrue(self.engine.getMasterTrickCount() == 4)
 
 	def testEndPhaseIncorrectEndGame(self):
-		pass
+		hand = spawnDupCards(["3"], ["Diamonds", "Spades", "Hearts", "Clubs"])
+		self.humanPlayer.takeRelevantCards(hand)
+		self.assertTrue(self.humanPlayer.countHand() == 4)
+
+		self.assertTrue(not self.humanPlayer.gotGuess())
+
+		self.engine.trickCount = 12
+		self.assertTrue(self.engine.getMasterTrickCount() == 12)
+		self.engine.setPlayers([self.humanPlayer])
+
+
+		self.engine.endGameLoop(self.humanPlayer)
+		self.assertTrue(self.engine.getMasterTrickCount() == 13)
+		self.assertTrue(self.engine.endGame == True)
+
+		output = sys.stdout.getvalue().strip()
+
+
+		winningPhrase = """Congratulations %s, you have won the epic game of Go Fish with a trick count of %s. Make sure to tell all of your other friends (if you have any) that you won one of the most childish games in all the land!""" % (self.humanPlayer, 1)
+		self.assertEquals(output, winningPhrase)
+
 	
 	def tearDown(self):
 		self.humanPlayer = None

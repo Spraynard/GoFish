@@ -7,6 +7,7 @@ class TestGoFishEngine(GoFishEngine):
 			raise Exception("This engine is only reserved for tests")
 
 	def returnFirstHand(self):
+		# Returns the first seven cards of the deck, but doesn't disturb it.
 		import copy 
 		# return self.deck.cards[-7:len(self.deck.cards)]
 		deck_copy = copy.copy(self.getDeck().getCards())
@@ -42,7 +43,9 @@ class TestGoFishEngine(GoFishEngine):
 	def endPhase(self, player):
 		player.sortHand()
 		player.lookForTricks()
-		player.setTricks(self.getMasterTrickCount())	
+		tricks_added = player.setTricks()
+		self.addMasterTrickCount(tricks_added)
+	
 
 		if player.gotGuess():
 			# If the player has a good guess (e.g. they asked another player for a card that they
@@ -52,13 +55,26 @@ class TestGoFishEngine(GoFishEngine):
 			player.resetGuess()
 		else:
 			# If the player had to draw from the pile because they guessed badly.
-			self.addPlayerIndex()
+			self._addPlayerIndex()
 
 		if self.winConditionsMet():
 			self.toggleGameOver()
 		else:
 			return
+			# Don't want to take a turn because I only want to test the end phase of the engine
+			# 	Study what it does
 			# self.takeTurn()
+
+	def endGameLoop(self, player):
+		# Custom game loop where players only go to the end phase.
+		while not self.gameOver():
+			self.endPhase(player)
+
+		self.congratulations(self.returnWinningPlayer())
+
+	
+	def gameStart(self):
+		self.gameLoop()
 
 	def initialize(self):
 		# Don't want to start a game unless specifically

@@ -16,6 +16,7 @@ class Engine(object):
 		self.test = test
 		self.endGame = False
 
+
 # All Engines will have this obtaining and setting deck functionality
 	def getDeck(self):
 		# Summary: Gives the deck object out.
@@ -81,7 +82,7 @@ class Engine(object):
 			# Getting the current player for the turn
 			self.takeTurn()
 
-		self.congratulate(self.returnWinningPlayer())
+		self.congratulations(self.returnWinningPlayer())
 
 # All Engines will have a game that will end :)
 	def gameOver(self):
@@ -93,10 +94,12 @@ class Engine(object):
 
 # All Engines, at end game, will congratulate players
 	def congratulations(self, playerObj):
+		from HumanPlayer import HumanPlayer
+
 		winning_players = ""
 		winning_trick_amount = None
 
-		if type(playerObj) == str:
+		if isinstance(playerObj, HumanPlayer):
 			winning_players = playerObj
 			winning_trick_amount = playerObj.getTricks()
 		elif type(playerObj) == list:
@@ -110,15 +113,12 @@ class Engine(object):
 		else:
 			raise Exception("What the hell are you putting in here, man? That ain't cool.")
 
-		print "Congratulations %s, you have won the epic game of Go Fish with a trick count of %s. \
-		Make sure to tell all of your other friends (if you have any) that you won one of the most childish games \
-		in all the land!" % (winning_players, winning)
+		print """Congratulations %s, you have won the epic game of Go Fish with a trick count of %s. Make sure to tell all of your other friends (if you have any) that you won one of the most childish games in all the land!""" % (winning_players, winning_trick_amount)
 
 
 	def gameStart(self):
 		self.dealHands()
-		self.gameLoop()
-		self.endGame()
+		return self.gameLoop()
 
 	def initialize(self):
 		self.setDeck()

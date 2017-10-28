@@ -51,7 +51,7 @@ class HumanPlayer(object):
 		statementDict = {
 			1 : "\"I sure do not!\"",
 		}
-		print statementDict[random.choice(statementDict.keys())] % (self.getName())
+		print statementDict[random.choice(statementDict.keys())]
 
 	def defeatStatement(self):
 		statementDict = {
@@ -172,13 +172,17 @@ class HumanPlayer(object):
 			if len(g) == 4:
 				self.addTrickHolder(g)
 
-	def setTricks(self, trickRef):
+	def setTricks(self):
 		tH = self.getTrickHolder()
+		tricks_added = 0
 		while not len(tH) == 0:
 			self.addPlayerTrick()
-			self.addTotalTrick(trickRef)
 			t = tH.pop()
 			self.delTrickFromHand(t)
+			tricks_added += 1
+		# Have to reset the sorting dict here or we're fucked
+		self.resetSortingDict()
+		return tricks_added
 
 	# End Trick Functionality
 
@@ -218,6 +222,9 @@ class HumanPlayer(object):
 	# NEEDS ATTENTION - OCTOBER 17th, 2017
 	def getSortingDict(self):
 		return self.sortingDict
+
+	def resetSortingDict(self):
+		self.sortingDict = {}
 
 	def populateSortingDict(self):
 		sortingDict = self.getSortingDict()
