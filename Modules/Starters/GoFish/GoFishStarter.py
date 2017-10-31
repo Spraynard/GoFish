@@ -72,8 +72,6 @@ class GoFishStarter:
 
 	def addAllPlayers(self, player_n, bot_n):
 		player_bucket = []
-		bot_obj = Bot()
-
 		player_names = self.askPlayerNames(player_n)
 
 		for i in range(player_n):
@@ -83,7 +81,7 @@ class GoFishStarter:
 				player_bucket.append(HumanPlayer())
 
 		for i in range(bot_n):
-			player_bucket.append(bot_obj)
+			player_bucket.append(Bot())
 
 		if not self.test:
 			shuffle(player_bucket)

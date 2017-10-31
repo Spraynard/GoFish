@@ -62,7 +62,13 @@ class Bot(HumanPlayer):
 
 		hand = self.getHand()
 
-		self.setChosenCard(random.choice(hand))
+		if len(hand) == 0:
+			from Card import Card
+			chooseableCards = Card().acceptDict['ranks']
+			self.setChosenCard(Card(random.choice(chooseableCards)))
+		else:
+			self.setChosenCard(random.choice(hand))
+	
 	# chooseDict Functionality
 	def _getChooseDict(self):
 		return self.chooseDict

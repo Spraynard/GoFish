@@ -128,6 +128,7 @@ class GoFishEngine(Engine):
 				bot.talk('exclaim')
 			else:
 				chosenPlayer.talk('defeat')
+			cardsToChangePlayers = chosenPlayer.
 			chosenPlayer.giveToPlayer(player)
 		else:
 			if isinstance(chosenPlayer, Bot):
@@ -203,7 +204,6 @@ class GoFishEngine(Engine):
 			self._addPlayerIndex()
 
 		if self.winConditionsMet():
-			print "Win conditions are met mofo."
 			self.toggleGameOver()
 		return None
 
@@ -223,7 +223,6 @@ class GoFishEngine(Engine):
 		# 	- Scan hand to see if there are any tricks available
 		# 	- If four tricks, player wins
 		player = self.getCurrentPlayer()
-
 		self.initialPhase(player)
 		self.decisionPhase(player)
 		self.tradingPhase(player)
