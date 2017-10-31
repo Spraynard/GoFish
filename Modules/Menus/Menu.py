@@ -8,5 +8,5 @@ class Menu(object):
 	def chooseGame(self):
 		pass
 
-	def init(self):
+	def start(self):
 		pass

@@ -30,7 +30,7 @@ class HumanPlayer(object):
 
 	def __str__(self):
 		if not self.name:
-			return "'%s'" % name
+			return "'%s'" % self.name
 		else:
 			return "'HumanPlayer'"
 

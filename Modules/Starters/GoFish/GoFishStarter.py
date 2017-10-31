@@ -17,11 +17,11 @@ from time import sleep as sleep
 
 import sys
 
-sys.path.append('Modules/')
-sys.path.append('Modules/Cards/')
-sys.path.append('Modules/Players/')
-sys.path.append('Modules/Engines/')
-sys.path.append('Modules/Engines/GoFish/')
+sys.path.append('../../../Modules/')
+sys.path.append('../../../Modules/Cards/')
+sys.path.append('../../../Modules/Players/')
+sys.path.append('../../../Modules/Engines/')
+sys.path.append('../../../Modules/Engines/GoFish/')
 
 from Card import Card
 from HumanPlayer import HumanPlayer
@@ -53,7 +53,7 @@ class GoFishStarter:
 			# 	print "Please input 'y' or 'n'"
 			# else:
 			names = []
-			if name_flag:
+			if name_flag == 'y':
 				print "Okay, please input the names for each player: "
 				for i in range(player_n):
 					i_name = raw_input("Player #%s: " % (i + 1))
@@ -61,6 +61,8 @@ class GoFishStarter:
 
 					if (i == player_n - 1):
 						break
+			else:
+				return
 
 
 		return names
@@ -119,7 +121,7 @@ class GoFishStarter:
 					print "You can't have more than %s bots right now" % tot_bots
 				else:
 					# Limiting to one bot
-					bot_n = 1
+					bot_n = t_bot_n
 					break
 		return bot_n
 
@@ -131,18 +133,18 @@ class GoFishStarter:
 			try:
 				t_player_n = int(raw_input("Please enter the number of human players: "))
 			except:
-				print "Nope need to enter a # between 1 and 4"
+				print "Nope need to enter a # between 0 and 4"
 				continue
 			if not t_player_n:
-				player_n = 1
+				print "Haha, you're playing an all bot game. That's pretty nice!"
 				break
 			else:
 				if t_player_n > 4:
 					print "You can't have more than four players"
 				else:
 					# Limiting the amount of players to 1 right now
-					player_n = 1
-					# player_n = t_player_n
+					# player_n = 1
+					player_n = t_player_n
 					break
 		return player_n
 

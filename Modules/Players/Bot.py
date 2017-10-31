@@ -1,4 +1,5 @@
 import sys
+import time
 
 sys.path.append('../Cards/')
 
@@ -25,6 +26,9 @@ class Bot(HumanPlayer):
 			return "'Bot'"
 		else:
 			return self.name
+
+	def __eq__(self, other):
+		return self.id == other.id
 
 	def tauntPlayer(self):
 		import random
