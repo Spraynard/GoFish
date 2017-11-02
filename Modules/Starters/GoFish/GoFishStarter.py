@@ -31,9 +31,11 @@ from GoFishEngine import GoFishEngine
 class GoFishStarter:
 	def __init__(self, test = False):
 		self.players = []
-		self.engine = GoFishEngine();
+		self.engine = GoFishEngine()
 		self.player_no = False
 		self.test = test
+		self.maxPlayers = 10
+		self.humanPlayers = False
 
 	# Code for addition of players and general player code
 	def getPlayers(self):
@@ -42,12 +44,26 @@ class GoFishStarter:
 	def getPlayerN(self):
 		return self.player_no
 
+	def getMaxPlayerN(self):
+		return self.maxPlayers
+
+	def getIfHumanPlayers(self):
+		# Returns true if there are any human players in the game.
+		# 	False if not.
+		return self.humanPlayers
+
+	def setIfHumanPlayers(self, boolean):
+		# Setting the self.humanPlayers init variable.
+		if not type(boolean) == bool:
+			raise Exception("You are only supposed to put in a boolean indicating true if there is at least one human player, false if not.")
+		self.humanPlayers == boolean
+
 	def setPlayerN(self, n):
 		self.player_no = n
 
 	def askPlayerNames(self, player_n):
 		names = False
-		while not names:
+		while not names and self.getIfHumanPlayers():
 			name_flag = str(raw_input("Would you like to name yourselves (Y/N)?: ")).lower()
 			# if not (name_flag == 'y') or not (name_flag == 'n'):
 			# 	print "Please input 'y' or 'n'"
@@ -81,7 +97,7 @@ class GoFishStarter:
 				player_bucket.append(HumanPlayer())
 
 		for i in range(bot_n):
-			player_bucket.append(Bot())
+			player_bucket.append(Bot().randomName())
 
 		if not self.test:
 			shuffle(player_bucket)
@@ -89,22 +105,17 @@ class GoFishStarter:
 		for p in player_bucket:
 			self.addPlayer(p)
 
-# Question: How is this function supposed to know
-# 			how many players there are if players
-# 			and bots get added at the same time?!
-
 	def askBotN(self):
+		# Asks the players how many bots people want in their game.
+		# 	Returns the number given.
 		bot_n = False
 		# The number to fill up the card table
 		try:
-			tot_bots = 4 - self.getPlayerN()
+			tot_bots = self.getMaxPlayerN() - self.getPlayerN()
 		except:
 			raise Exception("Error with getting the # of players")
 		if tot_bots == 0:
 			return False
-		if tot_bots < 2:
-			return tot_bots
-
 		while True:
 			try:
 				t_bot_n = int(raw_input("Please enter the number of bots: "))
@@ -112,13 +123,12 @@ class GoFishStarter:
 				print "Nope, need to enter a number between 1 and %s" % tot_bots
 				continue
 			if not t_bot_n:
-				bot_n = 1
+				bot_n = 0
 				break
 			else:
 				if t_bot_n > tot_bots:
 					print "You can't have more than %s bots right now" % tot_bots
 				else:
-					# Limiting to one bot
 					bot_n = t_bot_n
 					break
 		return bot_n
@@ -137,12 +147,13 @@ class GoFishStarter:
 				print "Haha, you're playing an all bot game. That's pretty nice!"
 				break
 			else:
-				if t_player_n > 4:
-					print "You can't have more than four players"
+				if t_player_n > 10:
+					print "You can't have more than ten players"
 				else:
 					# Limiting the amount of players to 1 right now
 					# player_n = 1
 					player_n = t_player_n
+					self.setIfHumanPlayers(True)
 					break
 		return player_n
 

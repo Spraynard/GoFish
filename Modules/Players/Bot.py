@@ -17,18 +17,21 @@ class Bot(HumanPlayer):
 		self.rejections = ["%s: \"No", "%s: \"Nope", "%s: \"I sure do not", "%s: \"Hahaha, no", "%s: \"You wish!"]
 		
 		self.chooseDict = {}
+		self.name = name
 
 	def __repr__(self):
 		return "Bot #: %s" % self.id
 
 	def __str__(self):
-		if not self.name:
-			return "'Bot'"
-		else:
-			return self.name
+		return "Bot - %s" % self.name
 
 	def __eq__(self, other):
 		return self.id == other.id
+
+	def randomName(self):
+		from faker import Faker
+		fake = Faker()
+		return Bot(fake.name())
 
 	def tauntPlayer(self):
 		import random

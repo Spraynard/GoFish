@@ -215,8 +215,13 @@ class HumanPlayer(object):
 			return
 		self.takeCard(deck.draw())
 
-	def drawHand(self, deck):
-		for i in range(7):
+	def drawHand(self, deck, small_player_amt):
+		if not type(small_player_amt) == bool:
+			raise Exception("Hey you need to indicate with a boolean whether there are four or more players.")
+		initHandSize = 5
+		if small_player_amt:
+			initHandSize = 7
+		for i in range(initHandSize):
 			self.drawCard(deck)
 
 	# NEEDS ATTENTION - OCTOBER 17th, 2017

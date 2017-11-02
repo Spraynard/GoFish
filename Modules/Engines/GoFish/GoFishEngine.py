@@ -128,7 +128,7 @@ class GoFishEngine(Engine):
 				bot.talk('exclaim')
 			else:
 				chosenPlayer.talk('defeat')
-			cardsToChangePlayers = chosenPlayer.
+			# cardsToChangePlayers = chosenPlayer.
 			chosenPlayer.giveToPlayer(player)
 		else:
 			if isinstance(chosenPlayer, Bot):
@@ -153,9 +153,13 @@ class GoFishEngine(Engine):
 	def dealHands(self):
 		deck = self.getDeck()
 		players = self.getPlayers()
+		# Four players or more
+		fourOrLess = True
+		if len(players) > 3:
+			fourOrLess = False
 
 		for p in players:
-			p.drawHand(deck)
+			p.drawHand(deck, fourOrLess)
 	# Phases Coded Here
 
 	# Game Phases Here
